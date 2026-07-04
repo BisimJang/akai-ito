@@ -1,0 +1,1405 @@
+/* ============================================================
+   Akai Ito — Legal Investigation Interface
+   Deep navy authority with amber-gold intelligence accents
+   ============================================================ */
+
+/* --- Google Fonts: Inter for clarity, Playfair for authority --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* --- Design Tokens --- */
+:root {
+  /* Backgrounds: Deep legal navy */
+  --chalk-bg: #0e1219;
+  --chalk-bg-deep: #080c12;
+  --chalk-bg-surface: #141b26;
+  --chalk-bg-elevated: #1c2535;
+
+  /* Text: Platinum hierarchy */
+  --chalk-text: #dde3ed;
+  --chalk-text-dim: #8a95a8;
+  --chalk-text-bright: #f0f4fa;
+  --chalk-text-heading: #c9a84c; /* Amber gold — authority & intelligence */
+
+  /* Accent: Amber gold primary, teal for findings, rose for alerts */
+  --chalk-accent: #c9a84c;
+  --chalk-accent-glow: rgba(201, 168, 76, 0.18);
+  --chalk-warm: #c9a84c;
+  --chalk-warm-glow: rgba(201, 168, 76, 0.15);
+  --chalk-cool: #4dc9a8; /* Teal — confirmed evidence */
+  --chalk-cool-glow: rgba(77, 201, 168, 0.15);
+
+  /* Annotation colors */
+  --chalk-annotation-highlight-accent: rgba(201, 168, 76, 0.2);
+  --chalk-annotation-highlight-warm: rgba(201, 168, 76, 0.18);
+  --chalk-annotation-highlight-cool: rgba(77, 201, 168, 0.18);
+  --chalk-annotation-underline: #c9a84c;
+  --chalk-annotation-circle: rgba(201, 168, 76, 0.6);
+
+  /* UI Borders & shadows */
+  --chalk-border: rgba(201, 168, 76, 0.08);
+  --chalk-border-light: rgba(201, 168, 76, 0.15);
+  --chalk-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
+  --chalk-radius: 10px;
+  --chalk-radius-sm: 6px;
+
+  /* Controls */
+  --controls-bg: #141b26;
+  --controls-btn: #1c2535;
+  --controls-btn-hover: #243044;
+  --controls-btn-active: #c9a84c;
+
+  /* Sizing */
+  --header-height: 56px;
+  --footer-height: 64px;
+
+  /* Typography */
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* --- Reset --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--chalk-bg-deep);
+  color: var(--chalk-text);
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  height: 100%;
+}
+
+/* --- App Shell --- */
+.chalk-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--chalk-bg-deep);
+}
+
+/* --- Header --- */
+.header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 24px;
+  background: var(--chalk-bg);
+  border-bottom: 1px solid var(--chalk-border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.header__logo {
+  font-size: 22px;
+  color: var(--chalk-accent);
+  filter: drop-shadow(0 0 8px var(--chalk-accent-glow));
+}
+
+.header__name {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--chalk-text-bright);
+}
+
+.header__lesson-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.header__subject {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--chalk-accent);
+  background: var(--chalk-accent-glow);
+  padding: 3px 10px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+
+.header__title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--chalk-text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header__lesson-picker {
+  flex-shrink: 0;
+}
+
+.header__select {
+  background: var(--chalk-bg-surface);
+  color: var(--chalk-text);
+  border: 1px solid var(--chalk-border-light);
+  border-radius: var(--chalk-radius-sm);
+  padding: 6px 12px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9590' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+.header__select:hover {
+  border-color: var(--chalk-accent);
+}
+
+.header__select:focus {
+  border-color: var(--chalk-accent);
+  box-shadow: 0 0 0 2px var(--chalk-accent-glow);
+}
+
+.header__select option {
+  background: var(--chalk-bg-surface);
+  color: var(--chalk-text);
+}
+
+.header__shortcuts {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.shortcut-hint {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--chalk-text-dim);
+  background: var(--chalk-bg-surface);
+  border: 1px solid var(--chalk-border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-family: var(--font-mono);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.shortcut-hint:hover {
+  opacity: 1;
+}
+
+/* --- Main / Whiteboard --- */
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+.whiteboard {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  background: var(--chalk-bg);
+  transition: flex 0.4s ease;
+
+  /* Subtle chalkboard texture via gradient */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(126, 184, 247, 0.02) 0%, transparent 70%),
+    radial-gradient(ellipse at 80% 20%, rgba(247, 201, 126, 0.015) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 80%, rgba(126, 247, 178, 0.01) 0%, transparent 60%);
+}
+
+/* Custom scrollbar */
+.whiteboard::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* --- Visual Panel --- */
+.visual-panel {
+  flex: 0 0 40%;
+  position: relative;
+  background: var(--chalk-bg-surface);
+  border-left: 1px solid var(--chalk-border);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* --- Physics Overlay --- */
+.physics-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through */
+  z-index: 4;
+}
+
+.whiteboard::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.whiteboard::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+.whiteboard::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* --- Board Content --- */
+.board__content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 32px 120px;
+}
+
+/* --- Board Blocks --- */
+.board__block {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.board__paragraph {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--chalk-text);
+}
+
+.board__heading {
+  font-weight: 600;
+  color: var(--chalk-text-heading);
+  letter-spacing: -0.02em;
+}
+
+.board__heading--h1 {
+  font-size: 28px;
+  line-height: 1.3;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--chalk-border);
+}
+
+.board__heading--h2 {
+  font-size: 20px;
+  line-height: 1.4;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: var(--chalk-accent);
+}
+
+.board__heading--h3 {
+  font-size: 17px;
+  line-height: 1.5;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+.board__code {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.7;
+  background: var(--chalk-bg-surface);
+  border: 1px solid var(--chalk-border);
+  border-radius: var(--chalk-radius-sm);
+  padding: 16px 20px;
+  margin: 12px 0;
+  overflow-x: auto;
+  color: var(--chalk-accent);
+}
+
+/* --- Math Blocks (KaTeX) --- */
+.board__math {
+  margin: 20px 0;
+  padding: 24px 28px;
+  background: var(--chalk-bg-surface);
+  border-left: 3px solid var(--chalk-accent);
+  border-radius: 0 var(--chalk-radius-sm) var(--chalk-radius-sm) 0;
+  text-align: center;
+  overflow-x: auto;
+}
+
+/* Raw LaTeX source while streaming */
+.board__math-source {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--chalk-text-dim);
+  letter-spacing: 0.02em;
+}
+
+/* Rendered KaTeX output */
+.board__math-rendered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 32px;
+}
+
+.board__math-rendered--fallback {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--chalk-accent);
+}
+
+/* KaTeX dark theme overrides */
+.board__math-rendered .katex {
+  font-size: 1.3em;
+  color: var(--chalk-text-bright);
+}
+
+.board__math-rendered .katex .mord,
+.board__math-rendered .katex .mbin,
+.board__math-rendered .katex .mrel,
+.board__math-rendered .katex .mopen,
+.board__math-rendered .katex .mclose,
+.board__math-rendered .katex .mop,
+.board__math-rendered .katex .mpunct {
+  color: var(--chalk-text-bright);
+}
+
+.board__math-rendered .katex .mfrac .frac-line {
+  border-color: var(--chalk-text-dim);
+}
+
+/* --- Diagram Blocks (Mermaid) --- */
+.board__diagram {
+  margin: 20px 0;
+  padding: 24px;
+  background: var(--chalk-bg-surface);
+  border-left: 3px solid var(--chalk-cool);
+  border-radius: 0 var(--chalk-radius-sm) var(--chalk-radius-sm) 0;
+  overflow-x: auto;
+}
+
+.board__diagram-source {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--chalk-text-dim);
+  white-space: pre-wrap;
+}
+
+.board__diagram-rendered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40px;
+}
+
+.board__diagram-rendered--fallback {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--chalk-warm);
+  white-space: pre-wrap;
+}
+
+.board__diagram-rendered svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Inline math */
+.board__inline-math {
+  display: inline;
+  vertical-align: baseline;
+}
+
+.board__inline-math .katex {
+  font-size: 1.05em;
+  color: var(--chalk-accent);
+}
+
+.board__text {
+  display: inline;
+}
+
+/* --- Character animation --- */
+.board__char {
+  display: inline;
+  opacity: 0;
+  animation: chalkAppear 0.15s ease forwards;
+}
+
+.board__char--instant {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes chalkAppear {
+  0% {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.7;
+    filter: blur(0.5px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* --- Cursor --- */
+.board__cursor {
+  display: inline;
+  color: var(--chalk-accent);
+  font-weight: 300;
+  animation: cursorBlink 0.8s ease-in-out infinite;
+  margin-left: 1px;
+  font-size: 1.1em;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Block complete — hide cursor */
+.board__block--complete .board__cursor {
+  display: none;
+}
+
+/* --- Annotations (CSS-based) --- */
+.annotated--highlight {
+  border-radius: 2px;
+  padding: 1px 0;
+  transition: background-color 0.4s ease;
+}
+
+.annotated--highlight.annotation--accent {
+  background-color: var(--chalk-annotation-highlight-accent);
+  color: var(--chalk-accent);
+}
+
+.annotated--highlight.annotation--warm {
+  background-color: var(--chalk-annotation-highlight-warm);
+  color: var(--chalk-warm);
+}
+
+.annotated--highlight.annotation--cool {
+  background-color: var(--chalk-annotation-highlight-cool);
+  color: var(--chalk-cool);
+}
+
+.annotated--underline {
+  text-decoration: none;
+  background-image: linear-gradient(to right, var(--chalk-annotation-underline), var(--chalk-annotation-underline));
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+  animation: underlineGrow 0.5s ease forwards;
+  padding-bottom: 2px;
+}
+
+@keyframes underlineGrow {
+  to {
+    background-size: 100% 2px;
+  }
+}
+
+.annotated--circled {
+  position: relative;
+}
+
+/* --- Annotation Layer (SVG) --- */
+.annotation-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  overflow: visible;
+}
+
+.annotation-circle {
+  fill: none;
+  stroke: var(--chalk-annotation-circle);
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawCircle 0.8s ease forwards;
+  filter: drop-shadow(0 0 4px rgba(126, 184, 247, 0.2));
+}
+
+@keyframes drawCircle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.annotation-arrow {
+  stroke: var(--chalk-annotation-circle);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: drawArrow 0.6s ease forwards;
+}
+
+@keyframes drawArrow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --- Controls --- */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--footer-height);
+  padding: 0 24px;
+  background: var(--controls-bg);
+  border-top: 1px solid var(--chalk-border);
+}
+
+.controls__group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls__group--left {
+  gap: 6px;
+}
+
+.controls__group--center {
+  gap: 10px;
+}
+
+.controls__group--right {
+  gap: 12px;
+}
+
+.controls__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--controls-btn);
+  border: 1px solid var(--chalk-border);
+  border-radius: var(--chalk-radius-sm);
+  color: var(--chalk-text);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.controls__btn:hover {
+  background: var(--controls-btn-hover);
+  border-color: var(--chalk-border-light);
+  transform: translateY(-1px);
+}
+
+.controls__btn:active {
+  transform: translateY(0);
+  background: var(--controls-btn);
+}
+
+.controls__btn--play-pause {
+  width: 44px;
+  height: 44px;
+  background: var(--chalk-accent);
+  color: var(--chalk-bg-deep);
+  border-color: transparent;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.controls__btn--play-pause:hover {
+  background: #dc2626;
+  border-color: transparent;
+  box-shadow: 0 0 16px var(--chalk-accent-glow);
+}
+
+.controls__btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Speed slider */
+.controls__speed-label {
+  font-size: 12px;
+  color: var(--chalk-text-dim);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.controls__speed-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 4px;
+  background: var(--chalk-bg-surface);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.controls__speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--chalk-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.controls__speed-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.controls__speed-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--chalk-accent);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.controls__speed-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--chalk-text);
+  font-family: var(--font-mono);
+  min-width: 32px;
+  text-align: center;
+}
+
+/* Status */
+.controls__status {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--chalk-text-dim);
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: var(--chalk-bg-surface);
+  transition: all 0.3s ease;
+}
+
+.controls__status--playing {
+  color: var(--chalk-cool);
+  background: rgba(126, 247, 178, 0.08);
+}
+
+.controls__status--paused {
+  color: var(--chalk-warm);
+  background: rgba(247, 201, 126, 0.08);
+}
+
+.controls__status--done {
+  color: var(--chalk-accent);
+  background: var(--chalk-accent-glow);
+}
+
+/* --- Footer --- */
+.footer {
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+/* --- Ask Button --- */
+.controls__btn--ask {
+  font-size: 14px;
+}
+
+.controls__btn--ask.controls__btn--active {
+  background: var(--chalk-warm);
+  color: var(--chalk-bg-deep);
+  border-color: transparent;
+  box-shadow: 0 0 12px var(--chalk-warm-glow);
+}
+
+/* --- Interrupted Status --- */
+.controls__status--interrupted {
+  color: var(--chalk-warm);
+  background: rgba(247, 201, 126, 0.12);
+  animation: statusPulse 2s ease infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ============================================================
+   Pedagogical Animations
+   Animations triggered by content, not UI.
+   ============================================================ */
+
+/* Pulse — draws attention with a glow */
+.anim--pulse {
+  animation: chalkPulse 500ms ease infinite !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+@keyframes chalkPulse {
+  0%, 100% {
+    text-shadow: 0 0 0 transparent;
+    filter: brightness(1);
+  }
+  50% {
+    text-shadow: 0 0 12px var(--chalk-accent), 0 0 24px var(--chalk-accent-glow);
+    filter: brightness(1.3);
+  }
+}
+
+/* Fade — content becomes negligible */
+.anim--fade {
+  /* opacity set via inline style by AnimationEngine */
+}
+
+/* Shrink — element contracts */
+.anim--shrink {
+  display: inline-block;
+  transform-origin: center center;
+  /* transform and opacity set via inline style */
+}
+
+/* Grow — element expands */
+.anim--grow {
+  display: inline-block;
+  /* transform set via inline style */
+}
+
+/* Crossout — strikethrough draws across text */
+.anim--crossout-wrapper {
+  position: relative;
+  display: inline;
+}
+
+.anim--crossout-text {
+  opacity: 0.4;
+  transition: opacity 0.4s ease;
+}
+
+.anim--crossout-line {
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  right: -2px;
+  height: 2px;
+  background: var(--chalk-warm);
+  transform-origin: left center;
+  animation: crossoutDraw 600ms ease forwards;
+  pointer-events: none;
+  box-shadow: 0 0 6px var(--chalk-warm-glow);
+}
+
+@keyframes crossoutDraw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ============================================================
+   Interrupt Flow — everything on the board
+   ============================================================ */
+
+/* Dimmed state — existing content fades back */
+.board__content--dimmed > .board__block,
+.board__content--dimmed > .board__resume-echo {
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+}
+
+/* The interrupt input itself stays bright */
+.board__content--dimmed > .board__interrupt {
+  opacity: 1;
+}
+
+/* Interrupt input block */
+.board__interrupt {
+  margin: 24px 0 16px;
+  padding: 16px 20px;
+  background: var(--chalk-bg-elevated);
+  border: 1px solid var(--chalk-border-light);
+  border-left: 3px solid var(--chalk-warm);
+  border-radius: 0 var(--chalk-radius-sm) var(--chalk-radius-sm) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: interruptSlideIn 0.3s ease;
+}
+
+@keyframes interruptSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.board__interrupt-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--chalk-warm);
+}
+
+.board__interrupt-input {
+  background: var(--chalk-bg-surface);
+  border: 1px solid var(--chalk-border-light);
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: var(--chalk-text-bright);
+  font-family: var(--font-main);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.board__interrupt-input::placeholder {
+  color: var(--chalk-text-dim);
+  font-style: italic;
+}
+
+.board__interrupt-input:focus {
+  border-color: var(--chalk-warm);
+  box-shadow: 0 0 0 2px var(--chalk-warm-glow);
+}
+
+.board__interrupt-hint {
+  font-size: 11px;
+  color: var(--chalk-text-dim);
+  font-style: italic;
+}
+
+/* Student message — right-aligned to distinguish from tutor */
+.board__student-msg {
+  margin: 16px 0;
+  padding: 12px 18px;
+  background: rgba(247, 201, 126, 0.08);
+  border: 1px solid rgba(247, 201, 126, 0.15);
+  border-radius: var(--chalk-radius-sm);
+  margin-left: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: interruptSlideIn 0.3s ease;
+}
+
+.board__student-msg-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--chalk-warm);
+}
+
+.board__student-msg-text {
+  font-size: 15px;
+  color: var(--chalk-text-bright);
+  line-height: 1.6;
+}
+
+/* Agent note — brief inline acknowledgment */
+.board__agent-note {
+  margin: 8px 0 16px;
+  padding: 10px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: interruptSlideIn 0.3s ease;
+}
+
+.board__agent-note-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--chalk-accent);
+}
+
+.board__agent-note-text {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--chalk-text-dim);
+  line-height: 1.6;
+}
+
+/* Resume echo — "As I was saying..." */
+.board__resume-echo {
+  margin: 12px 0;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--chalk-text-dim);
+  padding: 8px 0;
+  border-top: 1px solid var(--chalk-border);
+  animation: interruptSlideIn 0.3s ease;
+}
+
+/* ============================================================
+   Side Notes — pinned concepts in the right margin
+   ============================================================ */
+
+.board__side-notes {
+  position: absolute;
+  top: calc(var(--header-height) + 48px);
+  right: 20px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.board__side-note {
+  padding: 10px 14px;
+  background: rgba(247, 201, 126, 0.06);
+  border: 1px solid rgba(247, 201, 126, 0.12);
+  border-radius: var(--chalk-radius-sm);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--chalk-warm);
+  font-style: italic;
+  pointer-events: auto;
+  position: relative;
+}
+
+.board__side-note::before {
+  content: '📌';
+  font-size: 10px;
+  position: absolute;
+  top: -6px;
+  left: 8px;
+  font-style: normal;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .header__shortcuts {
+    display: none;
+  }
+
+  .header__lesson-info {
+    display: none;
+  }
+
+  .board__content {
+    padding: 32px 20px 100px;
+  }
+
+  .board__heading--h1 {
+    font-size: 22px;
+  }
+
+  .board__heading--h2 {
+    font-size: 18px;
+  }
+
+  .controls {
+    padding: 0 16px;
+  }
+
+  .controls__speed-slider {
+    width: 70px;
+  }
+
+  .controls__group--center {
+    gap: 6px;
+  }
+
+  .controls__speed-label {
+    display: none;
+  }
+
+  .board__side-notes {
+    display: none;
+  }
+
+  .board__student-msg {
+    margin-left: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .board__content {
+    padding: 24px 16px 80px;
+  }
+
+  .controls__group--center {
+    display: none;
+  }
+
+  .board__student-msg {
+    margin-left: 20px;
+  }
+}
+
+/* --- Selection styling --- */
+::selection {
+  background: var(--chalk-accent-glow);
+  color: var(--chalk-text-bright);
+}
+
+/* --- Focus visible for accessibility --- */
+:focus-visible {
+  outline: 2px solid var(--chalk-accent);
+  outline-offset: 2px;
+}
+
+
+/* --- Study Bubble Modal --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(18, 20, 26, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.modal {
+  background: var(--chalk-bg-surface);
+  border: 1px solid var(--chalk-border);
+  border-radius: var(--chalk-radius);
+  width: 480px;
+  max-width: 90vw;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-overlay--hidden .modal {
+  transform: translateY(20px);
+}
+
+.modal__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--chalk-text-bright);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.modal__subtitle {
+  font-size: 14px;
+  color: var(--chalk-text-dim);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.modal__form-group {
+  margin-bottom: 24px;
+}
+
+.modal__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--chalk-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.modal__input {
+  width: 100%;
+  background: var(--chalk-bg);
+  border: 1px solid var(--chalk-border-light);
+  border-radius: var(--chalk-radius-sm);
+  padding: 12px 16px;
+  color: var(--chalk-text);
+  font-size: 15px;
+  font-family: var(--font-main);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal__input:focus {
+  border-color: var(--chalk-accent);
+}
+
+.modal__dropzone {
+  border: 1px dashed var(--chalk-border-light);
+  border-radius: var(--chalk-radius-sm);
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--chalk-bg);
+  transition: all 0.2s ease;
+}
+
+.modal__dropzone:hover, .modal__dropzone--active {
+  border-color: var(--chalk-accent);
+  background: var(--chalk-accent-glow);
+}
+
+.modal__dropzone-text {
+  font-size: 14px;
+  color: var(--chalk-text-dim);
+}
+
+.modal__dropzone-text strong {
+  color: var(--chalk-accent);
+}
+
+.modal__btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--chalk-accent);
+  color: var(--chalk-bg-deep);
+  border: none;
+  border-radius: var(--chalk-radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 16px;
+}
+
+.modal__btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+.modal__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* --- Outline View --- */
+.outline-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--chalk-bg-deep);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px;
+  overflow-y: auto;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.outline-overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.outline__header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.outline__title {
+  font-size: 32px;
+  color: var(--chalk-text-bright);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.outline__subtitle {
+  font-size: 16px;
+  color: var(--chalk-text-dim);
+}
+
+.outline__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px 80px;
+}
+
+.outline__card {
+  background: var(--chalk-bg-surface);
+  border: 1px solid var(--chalk-border);
+  border-radius: var(--chalk-radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.outline__card:hover {
+  transform: translateY(-2px);
+  border-color: var(--chalk-accent);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.outline__card-number {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--chalk-accent);
+  font-weight: 600;
+  background: var(--chalk-accent-glow);
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.outline__card-title {
+  font-size: 18px;
+  color: var(--chalk-text);
+  font-weight: 500;
+}
+/* --- Landing Page (Apple Aesthetic) --- */
+.landing-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #000000;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 40px;
+}
+
+.landing-content {
+  max-width: 800px;
+  text-align: center;
+}
+
+.landing-eyebrow {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #86868b;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.landing-title {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: clamp(48px, 8vw, 84px);
+  font-weight: 700;
+  color: #f5f5f7;
+  line-height: 1.05;
+  margin-bottom: 30px;
+  letter-spacing: -0.03em;
+  background-image: linear-gradient(180deg, #fff 0%, #a2a2a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-pitch {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #86868b;
+  margin-bottom: 48px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 400;
+}
+
+.landing-use-cases {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 56px;
+}
+
+.landing-tag {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #f5f5f7;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.landing-cta {
+  display: inline-block;
+  padding: 18px 48px;
+  background: #f5f5f7;
+  color: #000000;
+  border: none;
+  border-radius: 30px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.landing-cta:hover {
+  transform: scale(1.02);
+  background: #ffffff;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+}
+
