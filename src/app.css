@@ -182,7 +182,7 @@ input, textarea, select { font-family: var(--font); outline: none; }
 /* =============================================
    LANDING PAGE
    ============================================= */
-.landing { overflow-y: auto; overflow-x: hidden; background: var(--white); }
+.landing { overflow-y: auto; overflow-x: hidden; background: var(--white); height: 100vh; }
 
 /* Navbar */
 .landing-nav {

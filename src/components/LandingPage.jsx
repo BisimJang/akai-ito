@@ -138,13 +138,13 @@ export function LandingPage({ onGetStarted }) {
           </button>
         </div>
         <p className="landing-hero-note">
-          Built for lawyers, investigators, and journalists.
+          Ideal for use cases like:
         </p>
       </section>
 
       {/* Social proof bar */}
       <div className="landing-proof">
-        <p className="landing-proof-label">Trusted by professionals who deal with complex cases</p>
+        <p className="landing-proof-label">Designed for professionals who deal with complex cases</p>
         <div className="landing-proof-tags">
           {[
             'Defense Counsel',
