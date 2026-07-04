@@ -1,0 +1,5 @@
+fastapi>=0.116.2
+uvicorn
+cognee[all]
+python-dotenv
+pydantic
