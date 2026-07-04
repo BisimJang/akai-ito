@@ -22,12 +22,12 @@ const upload = multer({
 });
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const COGNEE_BASE_URL = 'http://localhost:8002';
+const COGNEE_URL = process.env.COGNEE_URL || 'http://127.0.0.1:8002';
 
 // ─── Cognee Helper ────────────────────────────────────────────────────────────
 async function fetchCognee(endpoint, body) {
   try {
-    const res = await fetch(`${COGNEE_BASE_URL}${endpoint}`, {
+    const res = await fetch(`${COGNEE_URL}${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
