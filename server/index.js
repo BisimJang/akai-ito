@@ -1,4 +1,5 @@
 import express from 'express';
+import { OAuth2Client } from 'google-auth-library';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
@@ -93,6 +94,31 @@ app.post('/api/auth/login', async (req, res) => {
     res.json({ user });
   } catch (err) {
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+const oAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+app.post('/api/auth/google', async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ error: 'Token required' });
+  try {
+    const ticket = await oAuth2Client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    const username = payload.email.split('@')[0];
+
+    let user = await prisma.user.findUnique({ where: { username } });
+    if (!user) {
+      user = await prisma.user.create({ data: { username, email } });
+    }
+    res.json({ user });
+  } catch (err) {
+    console.error('Google Auth Error:', err);
+    res.status(401).json({ error: 'Invalid Google token' });
   }
 });
 

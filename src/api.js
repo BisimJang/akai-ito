@@ -16,6 +16,7 @@ export const api = {
   // Auth
   signup: (username, email) => req('/api/auth/signup', { method: 'POST', body: JSON.stringify({ username, email }) }),
   login: (username) => req('/api/auth/login', { method: 'POST', body: JSON.stringify({ username }) }),
+  googleLogin: (token) => req('/api/auth/google', { method: 'POST', body: JSON.stringify({ token }) }),
 
   // Cases
   getCases: (userId, status) => req(`/api/users/${userId}/cases${status ? `?status=${status}` : ''}`),
