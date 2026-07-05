@@ -14,11 +14,6 @@ export function AppLayout({ user, view, activeCaseTitle, onNav, onLogout, onGoHo
           <span className="sidebar-brand">Akai Ito</span>
         </div>
 
-        <div className="sidebar-user">
-          <div className="sidebar-user-avatar">{user.username[0].toUpperCase()}</div>
-          <span className="sidebar-user-name">{user.username}</span>
-        </div>
-
         <nav className="sidebar-nav">
           <div className="sidebar-section-label">Workspace</div>
           {NAV.map(item => (
@@ -46,10 +41,10 @@ export function AppLayout({ user, view, activeCaseTitle, onNav, onLogout, onGoHo
         </nav>
 
         <div className="sidebar-footer">
-          <button className="sidebar-nav-item" style={{ width: '100%', color: 'var(--text-3)' }} onClick={onLogout}>
-            <span className="sidebar-nav-item-icon">⎋</span>
-            Sign Out
-          </button>
+          <div className="sidebar-user" style={{ padding: 0, border: 'none', background: 'transparent' }}>
+            <div className="sidebar-user-avatar">{user.username[0].toUpperCase()}</div>
+            <span className="sidebar-user-name">{user.username}</span>
+          </div>
         </div>
       </aside>
 

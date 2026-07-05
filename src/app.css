@@ -738,13 +738,36 @@ input, textarea, select { font-family: var(--font); outline: none; }
   .sidebar-nav { padding: 6px 8px; display: flex; gap: 4px; overflow-x: auto; white-space: nowrap; flex-wrap: nowrap; }
   .sidebar-section-label { display: none; }
   .sidebar-nav-item { width: auto; padding: 6px 12px; }
-  
-  /* Landing Page */
-  .landing-nav { padding: 0 20px; }
-  .landing-hero { padding: 100px 20px 60px; }
-  .landing-problem-inner, .landing-features-grid, .landing-how-steps { grid-template-columns: 1fr; gap: 40px; }
+  .sidebar-footer { display: none; } /* Hide profile on mobile to save vertical space */
   
   /* Dashboard */
   .case-dashboard { grid-template-columns: 1fr; }
   .cases-stats { grid-template-columns: 1fr; }
+  
+  /* Landing Page */
+  .landing-nav { padding: 14px 20px; flex-wrap: wrap; justify-content: space-between; }
+  .landing-nav-links { display: none; } /* Hide middle links to save space */
+  .landing-hero { padding: 80px 20px 40px; }
+  .landing-hero-title { font-size: clamp(36px, 10vw, 48px); }
+  .landing-problem-inner, .landing-how-steps { grid-template-columns: 1fr; gap: 24px; }
+  
+  .landing-features { padding: 40px 0; overflow: hidden; }
+  .landing-features-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding: 0 20px 20px 20px;
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .landing-features-grid::-webkit-scrollbar { display: none; }
+  
+  .landing-feature { padding: 20px; gap: 12px; min-width: 280px; scroll-snap-align: center; }
+  .landing-feature-title { font-size: 16px; margin-bottom: 4px; }
+  .landing-feature-text { font-size: 13px; line-height: 1.5; }
+  
+  .landing-problem { padding: 60px 20px; }
+  .landing-how { padding: 60px 20px; }
+  .landing-final-cta { padding: 60px 24px; }
 }

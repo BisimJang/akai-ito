@@ -75,16 +75,10 @@ function EvidencePanel({ caseFile, onEvidenceAdded }) {
     setLoading(true);
     try {
       if (files.length > 0) {
-        // Mocking upload delays
-        for (const f of files) {
-          // In real app, create FormData and upload.
-          await new Promise(r => setTimeout(r, 800)); 
-          await api.addEvidence(caseFile.id, { type: 'file', label: f.name });
-        }
+        await api.uploadEvidence(caseFile.id, files, null);
       }
       if (url.trim()) {
-        await new Promise(r => setTimeout(r, 600));
-        await api.addEvidence(caseFile.id, { type: 'url', label: url.trim() });
+        await api.uploadEvidence(caseFile.id, null, url.trim());
       }
       setFiles([]);
       setUrl('');
@@ -312,6 +306,9 @@ export function CaseDetail({ caseId, onBack }) {
 
       <div className="case-dashboard">
         <div className="case-dashboard-main">
+          
+          {/* Add Evidence on top */}
+          <EvidencePanel caseFile={caseFile} onEvidenceAdded={reload} />
 
           {caseFile.summary ? (
             <CollapsibleSection title="Case Summary" defaultOpen={true}>
@@ -373,8 +370,6 @@ export function CaseDetail({ caseId, onBack }) {
         </div>
 
         <div className="case-dashboard-side">
-          <EvidencePanel caseFile={caseFile} onEvidenceAdded={reload} />
-
           <CollapsibleSection 
             title="Evidence Log" 
             defaultOpen={true}
@@ -387,11 +382,18 @@ export function CaseDetail({ caseId, onBack }) {
             ) : (
               <div className="evidence-list">
                 {caseFile.evidence.map(ev => (
-                  <div key={ev.id} className="evidence-item">
+                  <a 
+                    key={ev.id} 
+                    className="evidence-item" 
+                    href={ev.type === 'url' ? ev.label : '#'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none', cursor: 'pointer' }}
+                  >
                     <span className="evidence-type-icon">{ev.type === 'url' ? 'URL' : 'FILE'}</span>
-                    <span className="evidence-label">{ev.label}</span>
+                    <span className="evidence-label" style={{ color: 'var(--blue)' }}>{ev.label}</span>
                     <span className="evidence-date">{formatDate(ev.createdAt)}</span>
-                  </div>
+                  </a>
                 ))}
               </div>
             )}

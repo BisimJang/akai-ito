@@ -95,7 +95,7 @@ function NodeGraph() {
   );
 }
 
-export function LandingPage({ onGetStarted }) {
+export function LandingPage({ user, onGetStarted }) {
   return (
     <div className="landing">
 
@@ -111,8 +111,14 @@ export function LandingPage({ onGetStarted }) {
           <a href="#faq" className="landing-nav-link">FAQ</a>
         </div>
         <div className="landing-nav-actions">
-          <button className="btn btn-ghost-dark" onClick={onGetStarted}>Sign In</button>
-          <button className="btn btn-dark" onClick={onGetStarted}>Get Started</button>
+          {user ? (
+            <button className="btn btn-dark" onClick={onGetStarted}>Go to Dashboard</button>
+          ) : (
+            <>
+              <button className="btn btn-ghost-dark" onClick={onGetStarted}>Sign In</button>
+              <button className="btn btn-dark" onClick={onGetStarted}>Get Started</button>
+            </>
+          )}
         </div>
       </nav>
 
@@ -128,7 +134,7 @@ export function LandingPage({ onGetStarted }) {
         </p>
         <div className="landing-hero-ctas">
           <button className="btn btn-dark btn-lg" onClick={onGetStarted}>
-            Start Free — No Credit Card
+            {user ? 'Go to Dashboard' : 'Start Free — No Credit Card'}
           </button>
           <button
             className="btn btn-outline btn-lg"

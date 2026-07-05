@@ -53,7 +53,7 @@ export default function App() {
   };
 
   if (page === 'landing') {
-    return <LandingPage onGetStarted={() => setPage(user ? 'app' : 'auth')} />;
+    return <LandingPage user={user} onGetStarted={() => setPage(user ? 'app' : 'auth')} />;
   }
 
   if (page === 'auth') {
