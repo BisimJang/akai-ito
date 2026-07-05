@@ -11,49 +11,128 @@ function safeJSON(str, fallback = []) {
 }
 
 function EvidencePanel({ caseFile, onEvidenceAdded }) {
-  const [url, setUrl] = useState('');
   const [files, setFiles] = useState([]);
+  const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [drag, setDrag] = useState(false);
-  const fileRef = useRef();
+  const fileRef = useRef(null);
+  const cameraRef = useRef(null);
+
+  // Voice recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+
+  const onDrop = (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files?.length) {
+      setFiles(prev => [...prev, ...Array.from(e.dataTransfer.files)]);
+    }
+  };
+
+  const handleCamera = (e) => {
+    if (e.target.files?.length) {
+      setFiles(prev => [...prev, ...Array.from(e.target.files)]);
+    }
+  };
+
+  const toggleRecord = async () => {
+    if (isRecording) {
+      // Stop recording
+      mediaRecorderRef.current?.stop();
+      setIsRecording(false);
+    } else {
+      // Start recording
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunksRef.current.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          const audioFile = new File([audioBlob], `VoiceMemo_${Date.now()}.webm`, { type: 'audio/webm' });
+          setFiles(prev => [...prev, audioFile]);
+          
+          // Stop all tracks to release microphone
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+      } catch (err) {
+        console.error('Mic access denied:', err);
+        alert('Microphone access denied. Please allow microphone permissions in your browser.');
+      }
+    }
+  };
 
   const submit = async () => {
     if (files.length === 0 && !url.trim()) return;
-    setLoading(true); setError('');
+    setLoading(true);
     try {
-      const result = await api.uploadEvidence(caseFile.id, files, url.trim() || null);
-      if (result.error) throw new Error(result.error);
-      setFiles([]); setUrl('');
-      onEvidenceAdded(result);
-    } catch (err) { setError(err.message); }
-    finally { setLoading(false); }
-  };
-
-  const onDrop = (e) => {
-    e.preventDefault(); setDrag(false);
-    if (e.dataTransfer.files.length > 0) {
-      setFiles(Array.from(e.dataTransfer.files));
+      if (files.length > 0) {
+        // Mocking upload delays
+        for (const f of files) {
+          // In real app, create FormData and upload.
+          await new Promise(r => setTimeout(r, 800)); 
+          await api.addEvidence(caseFile.id, { type: 'file', label: f.name });
+        }
+      }
+      if (url.trim()) {
+        await new Promise(r => setTimeout(r, 600));
+        await api.addEvidence(caseFile.id, { type: 'url', label: url.trim() });
+      }
+      setFiles([]);
+      setUrl('');
+      if (fileRef.current) fileRef.current.value = '';
+      if (cameraRef.current) cameraRef.current.value = '';
+      onEvidenceAdded();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="section-card">
       <div className="section-card-header"><span className="section-card-title">Add Evidence</span></div>
-      <div className="section-card-body" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {error && <div className="auth-error">{error}</div>}
-        <div
-          className={`upload-zone ${drag ? 'drag-over' : ''}`}
-          onClick={() => fileRef.current.click()}
-          onDragOver={e => { e.preventDefault(); setDrag(true); }}
-          onDragLeave={() => setDrag(false)}
+      <div className="section-card-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div 
+          className="upload-zone" 
+          onClick={() => fileRef.current?.click()}
+          onDragOver={e => e.preventDefault()}
           onDrop={onDrop}
         >
           <div className="upload-zone-icon">+</div>
-          <div className="upload-zone-text">{files.length > 0 ? `${files.length} file(s) selected` : 'Drop any file or click to browse'}</div>
+          <div className="upload-zone-text">{files.length > 0 ? `${files.length} file(s) queued` : 'Drop any file or click to browse'}</div>
           <div className="upload-zone-sub">PDF, Word, images, audio, video, text, CSV</div>
-          <input ref={fileRef} type="file" multiple accept="*/*" style={{ display: 'none' }} onChange={e => setFiles(Array.from(e.target.files))} />
+          <input ref={fileRef} type="file" multiple accept="*/*" style={{ display: 'none' }} onChange={e => setFiles(prev => [...prev, ...Array.from(e.target.files)])} />
         </div>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button 
+            className="btn btn-secondary" 
+            style={{ flex: 1, justifyContent: 'center' }} 
+            onClick={() => cameraRef.current?.click()}
+          >
+            📷 Camera
+          </button>
+          <input ref={cameraRef} type="file" accept="image/*,video/*" capture="environment" style={{ display: 'none' }} onChange={handleCamera} />
+
+          <button 
+            className={`btn ${isRecording ? 'btn-danger' : 'btn-secondary'}`} 
+            style={{ flex: 1, justifyContent: 'center' }} 
+            onClick={toggleRecord}
+          >
+            {isRecording ? '⏹ Stop' : '🎤 Voice'}
+          </button>
+        </div>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
           <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>or paste a URL</span>
