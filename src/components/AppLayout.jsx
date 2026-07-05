@@ -43,7 +43,15 @@ export function AppLayout({ user, view, activeCaseTitle, onNav, onLogout, onGoHo
         <div className="sidebar-footer">
           <div className="sidebar-user" style={{ padding: 0, border: 'none', background: 'transparent' }}>
             <div className="sidebar-user-avatar">{user.username[0].toUpperCase()}</div>
-            <span className="sidebar-user-name">{user.username}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+              <span className="sidebar-user-name">{user.username}</span>
+              <button 
+                onClick={onLogout} 
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: 11, textAlign: 'left', cursor: 'pointer', padding: 0, marginTop: 2 }}
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
       </aside>
