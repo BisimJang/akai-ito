@@ -33,7 +33,7 @@ async def remember_data(req: RememberRequest):
 async def recall_data(req: RecallRequest):
     try:
         # Retrieve context/answer. Passing dataset_name ensures case isolation.
-        results = await cognee.recall(req.query) 
+        results = await cognee.recall(req.query, dataset_name=req.dataset) 
         return {"results": results}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
